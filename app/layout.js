@@ -17,8 +17,10 @@ const inter = localFont({
   variable: "--font-inter",
 });
 
+const siteUrl = process.env.SITE_URL || "https://addis-eats-next-2.vercel.app";
+
 export const metadata = {
-  metadataBase: new URL("https://addiseats.et"),
+  metadataBase: new URL(siteUrl),
   title: {
     template: "%s · Addis Eats",
     default: "Addis Eats — food delivery in Addis Ababa",

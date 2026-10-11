@@ -1,0 +1,130 @@
+.empty {
+  text-align: center;
+  padding: var(--space-8) 0;
+  color: var(--color-text-muted);
+}
+
+.browseLink {
+  display: inline-block;
+  margin-top: var(--space-3);
+  color: var(--color-accent);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  flex-wrap: wrap;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.image {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+
+.info {
+  flex: 1;
+  min-width: 140px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.unitPrice {
+  color: var(--color-text-muted);
+  font-size: var(--font-xs);
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  padding: 2px var(--space-2);
+}
+
+.stepper button {
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: var(--radius-full);
+  background: var(--color-accent-tint);
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+.lineTotal {
+  font-weight: 700;
+  min-width: 80px;
+  text-align: right;
+}
+
+.remove {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: var(--font-xs);
+  text-decoration: underline;
+}
+
+.summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--space-5);
+  font-size: var(--font-lg);
+  padding: 0 var(--space-1);
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.clearBtn {
+  flex: 1;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+}
+
+.checkoutBtn {
+  flex: 2;
+  text-align: center;
+  background: var(--color-accent);
+  color: #fff;
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.checkoutBtn:hover {
+  background: var(--color-accent-hover);
+}

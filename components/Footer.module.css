@@ -1,0 +1,70 @@
+.footer {
+  margin-top: var(--space-8);
+  background: var(--color-surface);
+  border-top: 2px solid var(--color-accent);
+}
+
+.inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-5);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+  justify-content: space-between;
+}
+
+.brandCol {
+  flex: 1;
+  min-width: 220px;
+  max-width: 320px;
+}
+
+.brandRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: 800;
+  font-size: var(--font-lg);
+  color: var(--color-accent);
+}
+
+.tagline {
+  margin-top: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--font-sm);
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 160px;
+}
+
+.col h3 {
+  font-size: var(--font-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-1);
+}
+
+.col a,
+.col span {
+  color: var(--color-text);
+  text-decoration: none;
+  font-size: var(--font-sm);
+}
+
+.col a:hover {
+  color: var(--color-accent);
+}
+
+.bottom {
+  border-top: 1px solid var(--color-border);
+  padding: var(--space-4) var(--space-5);
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: var(--font-xs);
+}

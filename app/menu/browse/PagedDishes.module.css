@@ -1,0 +1,32 @@
+.meta {
+  color: var(--color-text-muted);
+  font-size: var(--font-sm);
+}
+
+.results {
+  transition: opacity 0.15s ease;
+}
+
+.updating {
+  opacity: 0.6;
+}
+
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-top: var(--space-5);
+}
+
+.pagination a {
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+.disabled {
+  color: var(--color-text-muted);
+}
+
+.error {
+  color: var(--danger);
+}

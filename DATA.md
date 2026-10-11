@@ -1,0 +1,44 @@
+# DATA.md: client-side data in Addis Eats (Day 41)
+
+Library: **SWR**. Every query uses the shared fetcher in `lib/fetcher.js`,
+which throws on non-OK responses (with `error.status` and the API's
+`{ error }` message), so SWR's `error` state is real.
+
+Server first: the menu, a dish, the checkout confirmation and the first paint
+of every page below stay in server components. Only what a server component
+cannot cover is a query here.
+
+SWR has no `staleTime`. The equivalent decision is each query's refresh rule below.
+
+## Queries
+
+### 1. Order status
+- **File:** `app/orders/[id]/OrderStatus.jsx`
+- **Key:** `/api/orders/${id}`
+- **Seed:** `fallbackData` is the order rendered by `app/orders/[id]/page.js`, so there is no spinner on first paint
+- **Refresh rule:** `refreshInterval` 5000 ms until the status is `Delivered`, then 0 (polling stops); revalidate on focus and reconnect (SWR defaults)
+- **Why:** the status changes while the customer watches, so it must be polled; 5 s feels live without hammering the server, and a delivered order can never change again.
+
+### 2. Menu search
+- **File:** `app/menu/SearchBox.jsx`
+- **Key:** `/api/dishes?q=${encodeURIComponent(debounced)}`, or `null` when the term is empty
+- **Seed:** the server-provided `dishes` prop is filtered locally for the debounced term and passed as `fallbackData`; SWR revalidates the API result behind the immediate list
+- **Refresh rule:** no interval; focus/reconnect defaults; input debounced 300 ms; `keepPreviousData: true`
+- **Why:** the existing server data avoids a loading spinner while the API revalidates; results depend only on what was typed, debounce stops a request per keystroke, the null key avoids searching for nothing, and `keepPreviousData` stops the list flashing empty between terms.
+
+### 3. Paged dish list
+- **File:** `app/menu/browse/PagedDishes.jsx`
+- **Key:** `/api/dishes?page=${page}`, where `page` comes from the URL query string
+- **Seed:** `fallbackData` from the server, only when the URL's page equals the page the server rendered
+- **Refresh rule:** no interval; focus/reconnect defaults; `keepPreviousData: true`
+- **Why:** the page number is part of the key so each page has its own cache entry; the page is in the URL so a result can be linked, and the old page stays visible while the next one loads.
+
+## Decisions, in one place
+
+| Decision | Choice | Reason |
+|---|---|---|
+| Fetcher | one shared `lib/fetcher.js` | one place that turns bad responses into errors |
+| Polling | order status only | the only data that changes without the user doing anything |
+| Debounce | 300 ms | long enough to skip keystrokes, short enough to feel instant |
+| `revalidateOnFocus` / `revalidateOnReconnect` | left at SWR defaults | menu and order data can change, and a refetch on focus is cheap; turning them off is for data that never changes |
+| Server seed | `fallbackData` per query | no loading state for data the server already had |

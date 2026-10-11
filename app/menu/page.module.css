@@ -1,0 +1,10 @@
+.browseLink {
+  display: inline-block;
+  margin-top: var(--space-5);
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+.browseLink:hover {
+  color: var(--color-accent-hover);
+}

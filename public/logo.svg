@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" fill="none">
+  <!-- Addis Eats Modern Emblem Logo - Fully Transparent Background -->
+  <!-- Scaled and positioned so both the brand name and slogan fit inside the circular frame -->
+  <g id="addis-eats-logo">
+    <!-- Outer Accent Decorative Ring / Ethiopian Basket Rim Pattern subtle geometric dashed teeth -->
+    <circle cx="256" cy="256" r="236" stroke="#e05a2b" stroke-width="8" stroke-dasharray="16 10" stroke-linecap="round" opacity="0.35"/>
+    <circle cx="256" cy="256" r="216" stroke="#e05a2b" stroke-width="6" opacity="0.9"/>
+    
+    <!-- Warm radiant inner ring -->
+    <circle cx="256" cy="256" r="198" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4 6" opacity="0.6"/>
+
+    <!-- Scaled-down central Mesob & Steam illustration (scaled ~0.82 and shifted up so slogan & text fit inside r=198 circle) -->
+    <g id="mesob-and-steam" transform="translate(256, 222) scale(0.81) translate(-256, -235)">
+      <!-- Steam swirls rising gracefully from the mesob/platter -->
+      <path d="M220 155 C215 135, 230 120, 222 98 C216 82, 226 70, 224 58" 
+            stroke="#e05a2b" stroke-width="6" stroke-linecap="round" fill="none" opacity="0.85"/>
+      <path d="M256 148 C250 124, 266 108, 258 84 C252 66, 260 54, 256 42" 
+            stroke="#f59e0b" stroke-width="7" stroke-linecap="round" fill="none"/>
+      <path d="M292 155 C297 135, 282 120, 290 98 C296 82, 286 70, 288 58" 
+            stroke="#e05a2b" stroke-width="6" stroke-linecap="round" fill="none" opacity="0.85"/>
+
+      <!-- Top Crown / Mesob Handle (Kofo Finial) -->
+      <path d="M246 172 C246 164, 266 164, 266 172 L262 188 L250 188 Z" fill="#e05a2b"/>
+      <circle cx="256" cy="166" r="10" fill="#f59e0b"/>
+
+      <!-- Traditional Mesob Lid / Food Cloche Dome -->
+      <path d="M256 186 L230 220 C238 222, 274 222, 282 220 Z" fill="#e05a2b"/>
+      
+      <!-- Lid Mid Tier with Habesha diamond weave pattern -->
+      <path d="M224 226 L170 286 C210 296, 302 296, 342 286 L288 226 C272 230, 240 230, 224 226 Z" fill="#e05a2b"/>
+      
+      <!-- Inlaid golden geometric woven accents on lid -->
+      <path d="M256 234 L264 246 L256 258 L248 246 Z" fill="#f59e0b"/>
+      <path d="M228 244 L235 254 L228 264 L221 254 Z" fill="#fbf8ff" opacity="0.9"/>
+      <path d="M284 244 L291 254 L284 264 L277 254 Z" fill="#fbf8ff" opacity="0.9"/>
+      <path d="M204 256 L210 265 L204 274 L198 265 Z" fill="#f59e0b"/>
+      <path d="M308 256 L314 265 L308 274 L302 265 Z" fill="#f59e0b"/>
+
+      <!-- Mesob Rim / Joint band -->
+      <rect x="156" y="290" width="200" height="12" rx="6" fill="#f59e0b"/>
+      <rect x="168" y="292" width="176" height="8" rx="4" fill="#d04819"/>
+
+      <!-- Mesob Base / Serving Platter (Gebeta) -->
+      <path d="M162 306 C170 348, 192 374, 256 374 C320 374, 342 348, 350 306 C314 316, 198 316, 162 306 Z" fill="#e05a2b"/>
+      
+      <!-- Platter bottom pedestal ring -->
+      <path d="M208 374 L196 394 C230 400, 282 400, 316 394 L304 374 C284 378, 228 378, 208 374 Z" fill="#d04819"/>
+      
+      <!-- Base Chevron Woven Accent lines -->
+      <path d="M226 322 L256 348 L286 322" stroke="#f59e0b" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <circle cx="256" cy="336" r="6" fill="#fbf8ff"/>
+
+      <!-- Subtle cutlery / culinary flourish wings -->
+      <path d="M124 230 C120 255, 126 280, 140 302" stroke="#e05a2b" stroke-width="5" stroke-linecap="round"/>
+      <path d="M388 230 C392 255, 386 280, 372 302" stroke="#e05a2b" stroke-width="5" stroke-linecap="round"/>
+    </g>
+
+    <!-- Typography: Both Brand Name & Slogan neatly fitted INSIDE the inner circular boundary -->
+    <!-- Brand Title: ADDIS EATS -->
+    <text x="256" y="386" 
+          text-anchor="middle" 
+          font-family="'Plus Jakarta Sans', system-ui, -apple-system, sans-serif" 
+          font-size="30" 
+          font-weight="900" 
+          letter-spacing="6" 
+          fill="#1f1e24">
+      ADDIS EATS
+    </text>
+    
+    <!-- Slogan: KITCHEN & DISPATCH -->
+    <text x="256" y="414" 
+          text-anchor="middle" 
+          font-family="'Plus Jakarta Sans', system-ui, -apple-system, sans-serif" 
+          font-size="12.5" 
+          font-weight="800" 
+          letter-spacing="4.5" 
+          fill="#e05a2b">
+      KITCHEN &amp; DISPATCH
+    </text>
+
+    <!-- Subtle grounding accent dots flanking the slogan -->
+    <circle cx="140" cy="410" r="2.5" fill="#f59e0b"/>
+    <circle cx="372" cy="410" r="2.5" fill="#f59e0b"/>
+  </g>
+</svg>

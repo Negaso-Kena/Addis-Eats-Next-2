@@ -17,7 +17,7 @@ const inter = localFont({
   variable: "--font-inter",
 });
 
-const siteUrl = process.env.SITE_URL || "https://addis-eats-next-2.vercel.app";
+const siteUrl = process.env.SITE_URL || "https://addis-eats-next-45.vercel.app";
 
 export const metadata = {
   metadataBase: new URL(siteUrl),

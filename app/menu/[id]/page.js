@@ -29,6 +29,13 @@ export async function generateMetadata({ params }) {
       description,
       type: "article",
       url: `/menu/${dish.id}`,
+      images: [{ url: dish.image, alt: dish.name }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${dish.name} · Addis Eats`,
+      description,
+      images: [dish.image],
     },
   };
 }

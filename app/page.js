@@ -14,7 +14,7 @@ export const metadata = {
     url: "/",
     images: [
       {
-        url: "/images/social-home.jpg",
+        url: "/images/landing-preview-v2.jpg",
         width: 1200,
         height: 630,
         alt: "Ethiopian food platter from Addis Eats",
@@ -26,7 +26,7 @@ export const metadata = {
     title: "Ethiopian food delivery in Addis Ababa · Addis Eats",
     description:
       "Discover Ethiopian favourites and daily specials, freshly prepared and delivered across Addis Ababa.",
-    images: ["/images/social-home.jpg"],
+    images: ["/images/landing-preview-v2.jpg"],
   },
 };
 

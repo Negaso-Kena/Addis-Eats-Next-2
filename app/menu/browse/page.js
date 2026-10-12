@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getAvailableDishes, getDishesPage } from "@/lib/dishes";
+import { getSocialImage } from "@/lib/socialImage";
 import PagedDishes from "./PagedDishes";
 
 const featuredDish = getAvailableDishes()[0];
@@ -16,7 +17,7 @@ export const metadata = {
     url: "/menu/browse",
     images: [
       {
-        url: featuredDish?.image || "/opengraph-image",
+        url: getSocialImage(featuredDish?.image),
         alt: featuredDish?.name || "Addis Eats menu",
       },
     ],
@@ -26,7 +27,7 @@ export const metadata = {
     title: "Browse all dishes · Addis Eats",
     description:
       "Explore Addis Eats dishes page by page, with Ethiopian meals, pizza, burgers and drinks.",
-    images: [featuredDish?.image || "/opengraph-image"],
+    images: [getSocialImage(featuredDish?.image)],
   },
 };
 

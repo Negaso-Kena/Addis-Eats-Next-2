@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getDishById, getDishes } from "@/lib/dishes";
 import { formatCurrency } from "@/lib/formatCurrency";
+import { getSocialImage } from "@/lib/socialImage";
 import AddToCartButton from "@/components/AddToCartButton";
 import { siteUrl } from "@/lib/siteUrl";
 import styles from "./page.module.css";
@@ -20,6 +21,7 @@ export async function generateMetadata({ params }) {
   }
 
   const description = `${dish.description} Order for ${dish.price} ETB, delivered across Addis Ababa.`;
+  const socialImage = getSocialImage(dish.image);
 
   return {
     title: dish.name,
@@ -30,13 +32,13 @@ export async function generateMetadata({ params }) {
       description,
       type: "article",
       url: `/menu/${dish.id}`,
-      images: [{ url: dish.image, alt: dish.name }],
+      images: [{ url: socialImage, alt: dish.name }],
     },
     twitter: {
       card: "summary_large_image",
       title: `${dish.name} · Addis Eats`,
       description,
-      images: [dish.image],
+      images: [socialImage],
     },
   };
 }

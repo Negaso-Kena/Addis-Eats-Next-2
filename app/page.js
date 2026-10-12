@@ -14,10 +14,10 @@ export const metadata = {
     url: "/",
     images: [
       {
-        url: "/opengraph-image",
+        url: "/images/social-home.jpg",
         width: 1200,
         height: 630,
-        alt: "Addis Eats — Ethiopian food delivered across Addis Ababa",
+        alt: "Ethiopian food platter from Addis Eats",
       },
     ],
   },
@@ -26,7 +26,7 @@ export const metadata = {
     title: "Ethiopian food delivery in Addis Ababa · Addis Eats",
     description:
       "Discover Ethiopian favourites and daily specials, freshly prepared and delivered across Addis Ababa.",
-    images: ["/opengraph-image"],
+    images: ["/images/social-home.jpg"],
   },
 };
 

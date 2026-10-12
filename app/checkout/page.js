@@ -13,7 +13,7 @@ export const metadata = {
   openGraph: {
     title: "Checkout · Addis Eats",
     description: "Complete your Addis Eats order and arrange delivery in Addis Ababa.",
-    images: ["/opengraph-image"],
+    images: ["/images/social-home.jpg"],
   },
 };
 

@@ -12,7 +12,7 @@ export const metadata = {
   openGraph: {
     title: "Sign in · Addis Eats",
     description: "Sign in to manage Addis Eats orders and delivery details.",
-    images: ["/opengraph-image"],
+    images: ["/images/social-home.jpg"],
   },
 };
 

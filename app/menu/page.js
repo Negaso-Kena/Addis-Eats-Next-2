@@ -1,4 +1,5 @@
 import { getAvailableDishes, CATEGORIES } from "@/lib/dishes";
+import { getSocialImage } from "@/lib/socialImage";
 import SearchBox from "./SearchBox";
 import Link from "next/link";
 import styles from "./page.module.css";
@@ -18,7 +19,7 @@ export const metadata = {
     url: "/menu",
     images: [
       {
-        url: featuredDish?.image || "/opengraph-image",
+        url: getSocialImage(featuredDish?.image),
         alt: featuredDish?.name || "Addis Eats menu",
       },
     ],
@@ -28,7 +29,7 @@ export const metadata = {
     title: "Ethiopian food menu · Addis Eats",
     description:
       "Browse Doro Wat, Tibs, Kitfo, Shiro and more Ethiopian dishes, delivered across Addis Ababa.",
-    images: [featuredDish?.image || "/opengraph-image"],
+    images: [getSocialImage(featuredDish?.image)],
   },
 };
 

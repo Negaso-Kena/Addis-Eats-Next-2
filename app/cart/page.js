@@ -8,7 +8,7 @@ export const metadata = {
   openGraph: {
     title: "Your order · Addis Eats",
     description: "Review the dishes in your Addis Eats order before checkout.",
-    images: ["/opengraph-image"],
+    images: ["/images/social-home.jpg"],
   },
 };
 

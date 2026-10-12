@@ -10,6 +10,24 @@ cannot cover is a query here.
 
 SWR has no `staleTime`. The equivalent decision is each query's refresh rule below.
 
+## Server and HTTP caching
+
+- `/` and `/menu/[id]` are statically rendered at build time.
+- `/menu` uses ISR with `revalidate = 3600`, so a page can be reused for an
+  hour before Next.js refreshes it in the background.
+- Public `GET /api/dishes` and `GET /api/dishes/[id]` responses send
+  `Cache-Control: public, max-age=0, s-maxage=3600,
+  stale-while-revalidate=86400`. Query strings (search and page) form distinct
+  URL cache keys.
+- User/session/order API responses send
+  `Cache-Control: private, no-store, max-age=0, must-revalidate`; responses
+  containing personal data must not be reused by a browser or shared CDN.
+
+This is route/HTTP and client SWR caching, not a shared persistent database
+cache. The dish source is a local JSON file. Orders and sessions remain in
+process memory, which is suitable for a single-process demo but not reliable
+across serverless instances.
+
 ## Queries
 
 ### 1. Order status

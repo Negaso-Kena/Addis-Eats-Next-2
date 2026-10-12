@@ -23,10 +23,25 @@ credentials are not production credentials.
 | `signIn` server action | Public by design | Verifies demo credentials | Creates a session and validates `next` as a same-origin relative URL. |
 | `signOut` server action | Public by design; signing out is safe for any caller | Reads the current cookie | Deletes the corresponding in-memory session if present and expires the cookie. |
 
-Middleware at `middleware.js` is a navigation gate, not authentication:
+The request gate in `proxy.js` is a navigation gate, not authentication:
 it checks only that a cookie exists. The page, action, and API layers verify
 the session stored by the server. Customer ownership checks are performed in
 the store lookup itself, not only after returning an order by id.
+
+The three checks have different jobs:
+
+1. Middleware redirects protected page requests that have no session cookie.
+   A fabricated cookie can pass this gate, so this is not proof of identity.
+2. The server page/action calls `getSession()` and verifies that the session
+   exists and maps to a known user; `/kitchen` also verifies the staff role.
+3. The data/action layer checks order ownership and validates/recomputes order
+   data. API routes do their own session checks because middleware does not run
+   for them.
+
+Do not describe the middleware check by itself as authentication. Sessions and
+orders use process-local memory, so this three-step demonstration is reliable
+only when related requests reach the same process. It is not production-ready
+for a multi-instance/serverless deployment without shared durable storage.
 
 The session cookie is set with `httpOnly`, `sameSite: "lax"`, root path, and
 a seven-day lifetime; `secure` is enabled in production. Session records

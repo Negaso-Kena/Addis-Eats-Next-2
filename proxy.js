@@ -1,15 +1,15 @@
 import { NextResponse } from "next/server";
 
-export function middleware(request) {
+export function proxy(request) {
   const session = request.cookies.get("session");
-  const url = new URL("/signin", request.url);
-  url.searchParams.set("next", request.nextUrl.pathname + request.nextUrl.search);
 
   if (!session) {
-    // Remember where the user was trying to go
-    const url = new URL("/signin", request.url);
-    url.searchParams.set("next", request.nextUrl.pathname);
-    return NextResponse.redirect(url);
+    const signInUrl = new URL("/signin", request.url);
+    signInUrl.searchParams.set(
+      "next",
+      request.nextUrl.pathname + request.nextUrl.search
+    );
+    return NextResponse.redirect(signInUrl);
   }
 
   // Cookie exists → let the request continue

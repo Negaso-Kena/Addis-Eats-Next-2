@@ -17,14 +17,28 @@ export const metadata = {
   },
 };
 
+function getQueryString(params) {
+  const query = new URLSearchParams();
+  for (const [key, value] of Object.entries(params ?? {})) {
+    if (Array.isArray(value)) {
+      value.forEach((entry) => query.append(key, entry));
+    } else if (typeof value === "string") {
+      query.set(key, value);
+    }
+  }
+  return query.toString();
+}
+
 export default async function CheckoutPage({ searchParams }) {
+  const params = await searchParams;
   // Second layer: verify the real session, not just the cookie existence
   const user = await getSession();
   if (!user) {
-    redirect("/signin?next=/checkout");
+    const query = getQueryString(params);
+    const next = `/checkout${query ? `?${query}` : ""}`;
+    redirect(`/signin?${new URLSearchParams({ next })}`);
   }
 
-  const params = await searchParams;
   const orderId = params?.order;
   const order = orderId
     ? getOrderForUser(orderId, user.id, user.role === "staff")

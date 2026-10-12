@@ -1,4 +1,4 @@
-const siteUrl = "https://addiseats.et";
+import { siteUrl } from "@/lib/siteUrl";
 
 export default function robots() {
   return {
@@ -13,6 +13,6 @@ export default function robots() {
         "/signin",
       ],
     },
-    sitemap: `${siteUrl}/sitemap.xml`,
+    sitemap: new URL("/sitemap.xml", siteUrl).href,
   };
 }

@@ -1,6 +1,5 @@
 import { getDishes } from "@/lib/dishes";
-
-const siteUrl = "https://addiseats.et";
+import { siteUrl } from "@/lib/siteUrl";
 
 export default function sitemap() {
   const routes = [
@@ -14,7 +13,7 @@ export default function sitemap() {
   ];
 
   return routes.map(({ path, priority }) => ({
-    url: `${siteUrl}${path}`,
+    url: new URL(path, siteUrl).href,
     changeFrequency: path.startsWith("/menu/") ? "weekly" : "daily",
     priority,
   }));

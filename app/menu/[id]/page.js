@@ -4,6 +4,7 @@ import Image from "next/image";
 import { getDishById, getDishes } from "@/lib/dishes";
 import { formatCurrency } from "@/lib/formatCurrency";
 import AddToCartButton from "@/components/AddToCartButton";
+import { siteUrl } from "@/lib/siteUrl";
 import styles from "./page.module.css";
 
 export async function generateMetadata({ params }) {
@@ -59,7 +60,7 @@ export default async function DishPage({ params }) {
     "@type": "MenuItem",
     name: dish.name,
     description: dish.description,
-    image: dish.image ? new URL(dish.image, "https://addiseats.et").href : undefined,
+    image: dish.image ? new URL(dish.image, siteUrl).href : undefined,
     offers: {
       "@type": "Offer",
       price: dish.price,
@@ -67,7 +68,7 @@ export default async function DishPage({ params }) {
       availability: dish.available
         ? "https://schema.org/InStock"
         : "https://schema.org/OutOfStock",
-      url: `https://addiseats.et/menu/${dish.id}`,
+      url: new URL(`/menu/${dish.id}`, siteUrl).href,
     },
   };
 

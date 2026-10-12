@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
-import { getDishesPage } from "@/lib/dishes";
+import { getAvailableDishes, getDishesPage } from "@/lib/dishes";
 import PagedDishes from "./PagedDishes";
+
+const featuredDish = getAvailableDishes()[0];
 
 export const metadata = {
   title: "Browse all dishes",
@@ -14,12 +16,17 @@ export const metadata = {
     url: "/menu/browse",
     images: [
       {
-        url: "/opengraph-image",
-        width: 1200,
-        height: 630,
-        alt: "Addis Eats Ethiopian food delivery",
+        url: featuredDish?.image || "/opengraph-image",
+        alt: featuredDish?.name || "Addis Eats menu",
       },
     ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Browse all dishes · Addis Eats",
+    description:
+      "Explore Addis Eats dishes page by page, with Ethiopian meals, pizza, burgers and drinks.",
+    images: [featuredDish?.image || "/opengraph-image"],
   },
 };
 

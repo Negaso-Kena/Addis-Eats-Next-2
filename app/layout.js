@@ -9,6 +9,7 @@ import Footer from "@/components/Footer";
 import KitchenLink from "./KitchenLink";
 import AuthStatus from "./AuthStatus";
 import styles from "./layout.module.css";
+import { siteUrl } from "@/lib/siteUrl";
 
 const inter = localFont({
   src: "./fonts/Inter-Latin.woff2",
@@ -17,10 +18,8 @@ const inter = localFont({
   variable: "--font-inter",
 });
 
-const siteUrl = process.env.SITE_URL || "https://addis-eats-next-45.vercel.app";
-
 export const metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: siteUrl,
   title: {
     template: "%s · Addis Eats",
     default: "Addis Eats — food delivery in Addis Ababa",

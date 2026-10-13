@@ -5,7 +5,6 @@ import { redirect } from "next/navigation";
 import {
   findUserByPhone,
   createSession,
-  destroySession,
   getSession,
 } from "@/lib/session";
 
@@ -59,15 +58,10 @@ function getSafeRedirectPath(value) {
 }
 
 /**
- * Sign out: clear the cookie and remove the session from the store.
+ * Sign out by expiring the signed session cookie.
  */
 export async function signOut() {
   const cookieStore = await cookies();
-  const token = cookieStore.get("session")?.value;
-
-  if (token) {
-    destroySession(token);
-  }
 
   cookieStore.set("session", "", {
     httpOnly: true,

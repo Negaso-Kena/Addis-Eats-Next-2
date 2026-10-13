@@ -1,7 +1,8 @@
 # Authentication, authorization, and ownership
 
-This is a teaching demo with in-memory users, sessions, and orders. Demo
-credentials are not production credentials.
+This is a teaching demo with in-memory users and orders. Demo credentials are
+not production credentials. Sessions use signed, stateless cookies so they can
+be verified consistently across serverless instances.
 
 | Role | Phone | Password |
 | --- | --- | --- |
@@ -21,31 +22,42 @@ credentials are not production credentials.
 | `POST /api/orders` | Not run on API routes | Handler calls `getSession()` | Validates the body, recomputes prices, and uses `user.id`; it never accepts an owner id. |
 | `GET /api/orders/[id]` | Not run on API routes | Handler calls `getSession()` | `getOrderForUser(id, user.id, user.role === "staff")`; unauthorized and missing orders both return 404. |
 | `signIn` server action | Public by design | Verifies demo credentials | Creates a session and validates `next` as a same-origin relative URL. |
-| `signOut` server action | Public by design; signing out is safe for any caller | Reads the current cookie | Deletes the corresponding in-memory session if present and expires the cookie. |
+| `signOut` server action | Public by design; signing out is safe for any caller | Expires the signed session cookie | |
 
 The request gate in `proxy.js` is a navigation gate, not authentication:
 it checks only that a cookie exists. The page, action, and API layers verify
-the session stored by the server. Customer ownership checks are performed in
-the store lookup itself, not only after returning an order by id.
+the cookie signature and expiration, then map its user id to a known user.
+Customer ownership checks are performed in the store lookup itself, not only
+after returning an order by id.
 
 The three checks have different jobs:
 
 1. Middleware redirects protected page requests that have no session cookie.
    A fabricated cookie can pass this gate, so this is not proof of identity.
-2. The server page/action calls `getSession()` and verifies that the session
-   exists and maps to a known user; `/kitchen` also verifies the staff role.
+2. The server page/action calls `getSession()` and verifies the signed token
+   and maps its user id to a known user; `/kitchen` also verifies the staff role.
 3. The data/action layer checks order ownership and validates/recomputes order
    data. API routes do their own session checks because middleware does not run
    for them.
 
-Do not describe the middleware check by itself as authentication. Sessions and
-orders use process-local memory, so this three-step demonstration is reliable
-only when related requests reach the same process. It is not production-ready
-for a multi-instance/serverless deployment without shared durable storage.
+Do not describe the middleware check by itself as authentication. The signed
+session token works across serverless instances, but the demo user directory
+and order data still use process-local memory and are not shared or durable.
 
 The session cookie is set with `httpOnly`, `sameSite: "lax"`, root path, and
-a seven-day lifetime; `secure` is enabled in production. Session records
-cannot be read by client JavaScript.
+a seven-day lifetime; `secure` is enabled in production. The token contains
+only a user id and timestamps, is integrity-protected with HMAC-SHA256, and
+cannot be read by client JavaScript. Production must set `SESSION_SECRET` to
+a unique random value of at least 32 bytes in Vercel's environment variables.
+All instances that serve the same cookie domain must use the same value;
+separate environments on different domains can use separate secrets. Never
+commit the actual secret.
+Local development uses a development-only fallback when the variable is absent.
+
+Because sessions are stateless, signing out expires the browser's cookie but
+cannot revoke a copied token before it expires. Changing `SESSION_SECRET`
+invalidates every existing session. Per-session revocation requires a shared
+durable session store.
 
 ## Attack checks
 
@@ -83,11 +95,11 @@ Verified against `npm start` after a successful Webpack production build:
 - The second customer received an empty order list, and direct `/kitchen`
   navigation displayed the staff-only denial.
 
-The order and session store is process-local, so these records are temporary
-and are not retained after restarting the server.
+The order store is process-local, so order records are temporary and are not
+retained after restarting the server.
 
-The store is in process memory. It is appropriate only for a local/class demo:
-sessions and orders are lost on restart, and multi-instance/serverless
-deployments do not share this memory. A real deployed application requires
-durable shared session and order storage before claiming reliable deployed
-authentication or ownership behavior.
+The demo user directory and order store are in process memory. Order records
+are lost on restart, and multi-instance/serverless deployments do not share
+them. A real deployed application requires durable shared user and order data;
+shared session storage is additionally required if immediate per-session
+revocation is needed.

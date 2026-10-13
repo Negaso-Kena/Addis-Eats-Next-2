@@ -32,10 +32,9 @@ across serverless instances.
 
 ### 1. Order status
 - **File:** `app/orders/[id]/OrderStatus.jsx`
-- **Key:** `/api/orders/${id}`
-- **Seed:** `fallbackData` is the order rendered by `app/orders/[id]/page.js`, so there is no spinner on first paint
-- **Refresh rule:** `refreshInterval` 5000 ms until the status is `Delivered`, then 0 (polling stops); revalidate on focus and reconnect (SWR defaults)
-- **Why:** the status changes while the customer watches, so it must be polled; 5 s feels live without hammering the server, and a delivered order can never change again.
+- **Seed:** the order rendered by `app/orders/[id]/page.js`
+- **Refresh rule:** recompute status locally every 5 seconds from the order's creation time; stop once the status is `Delivered`
+- **Why:** this demo's status is derived from order age rather than updated by a kitchen. Local calculation avoids polling a process-local order store across Vercel instances.
 
 ### 2. Menu search
 - **File:** `app/menu/SearchBox.jsx`

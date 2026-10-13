@@ -20,7 +20,3 @@
 .items {
   padding-left: var(--space-5);
 }
-
-.error {
-  color: var(--danger);
-}

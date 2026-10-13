@@ -30,7 +30,7 @@ export default async function OrderPage({ params }) {
         Signed in as {user.name}
         {user.role === "staff" && " (staff)"}
       </p>
-      <OrderStatus id={order.id} initial={order} />
+      <OrderStatus initial={order} />
     </section>
   );
 }

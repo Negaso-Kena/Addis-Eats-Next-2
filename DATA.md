@@ -30,6 +30,12 @@ across serverless instances.
 
 ## Queries
 
+### Cart
+- **File:** `lib/cart-store.js`
+- **Storage:** local storage is partitioned by signed-in user id; signed-out visitors use a separate guest cart
+- **Identity changes:** the new account's cart is loaded before it is displayed or persisted, so the previous account's in-memory cart cannot overwrite it
+- **Versioning:** `v2` keys intentionally do not reuse earlier cart entries, which may already have been copied across users by the previous account-switch race
+
 ### 1. Order status
 - **File:** `app/orders/[id]/OrderStatus.jsx`
 - **Seed:** the order rendered by `app/orders/[id]/page.js`

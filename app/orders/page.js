@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { getAllOrders, getOrdersByUserId } from "@/lib/orders-store";
 import { getSession } from "@/lib/session";
-import SignOutButton from "@/components/SignOutButton";
 import styles from "./page.module.css";
 
 export const metadata = {
@@ -25,7 +24,6 @@ export default async function OrdersPage() {
   return (
     <section>
       <h1>{user.role === "staff" ? "All orders" : "Your orders"}</h1>
-      <SignOutButton />
       {orders.length === 0 ? (
         <p className={styles.empty}>No orders yet.</p>
       ) : (

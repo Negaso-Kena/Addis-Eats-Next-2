@@ -24,7 +24,7 @@ export async function signIn(formData) {
   if (!user || user.password !== password) {
     const params = new URLSearchParams({ error: "1" });
     if (nextRaw && nextRaw !== "/") params.set("next", nextRaw);
-    redirect(`/signin?${params.toString()}`);
+    return { user: null, redirectTo: `/signin?${params.toString()}` };
   }
 
   const sessionId = createSession(user.id);
@@ -38,7 +38,10 @@ export async function signIn(formData) {
     path: "/",
   });
 
-  redirect(getSafeRedirectPath(nextRaw));
+  return {
+    user: { name: user.name, role: user.role },
+    redirectTo: getSafeRedirectPath(nextRaw),
+  };
 }
 
 function getSafeRedirectPath(value) {

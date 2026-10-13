@@ -107,9 +107,6 @@
     padding-inline: var(--space-4);
   }
 
-  .authName {
-    display: none;
-  }
 }
 
 .brand {

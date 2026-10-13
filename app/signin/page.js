@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/session";
-import { signIn } from "@/app/auth-actions";
 import Link from "next/link";
+import SignInForm from "./SignInForm";
 import styles from "./page.module.css";
 
 export const metadata = {
@@ -39,40 +39,12 @@ export default async function SignInPage({ searchParams }) {
       </p>
 
       {error && (
-        <p className={styles.error}>
+        <p role="alert" className={styles.error}>
           Invalid phone or password. Try again.
         </p>
       )}
 
-      <form action={signIn} className={styles.form}>
-        {/* Carry the intended destination through the form */}
-        <input type="hidden" name="next" value={next} />
-
-        <label htmlFor="phone">
-          Phone
-          <input
-            id="phone"
-            type="tel"
-            name="phone"
-            required
-            placeholder="0911223344"
-          />
-        </label>
-
-        <label htmlFor="password">
-          Password
-          <input
-            id="password"
-            type="password"
-            name="password"
-            required
-          />
-        </label>
-
-        <button type="submit" className={styles.submit}>
-          Sign in
-        </button>
-      </form>
+      <SignInForm next={next} />
 
       <p className={styles.back}>
         <Link href="/">← Back to home</Link>

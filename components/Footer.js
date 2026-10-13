@@ -30,12 +30,12 @@ export default function Footer() {
           <h3>Get in touch</h3>
           <span>Megenagna, Addis Ababa</span>
           <span>+251 91 234 5678</span>
-          <span>hello@addiseats.example</span>
+          <span>hello.addiseats@example.com</span>
         </div>
       </div>
 
       <div className={styles.bottom}>
-        <span>© {year} Addis Eats — built in Next.js.</span>
+        <span>© {year} Addis Eats — built by Negaso Kena.</span>
       </div>
     </footer>
   );

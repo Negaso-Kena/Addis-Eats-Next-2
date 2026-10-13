@@ -35,6 +35,8 @@ export default async function SignInPage({ searchParams }) {
         <br />
         Customer → <code>0911223344</code> / <code>customer123</code>
         <br />
+        Test Customer → <code>0911000000</code> / <code>customer456</code>
+        <br />
         Staff → <code>0999887766</code> / <code>staff123</code>
       </p>
 

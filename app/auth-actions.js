@@ -5,7 +5,6 @@ import { redirect } from "next/navigation";
 import {
   findUserByPhone,
   createSession,
-  getSession,
 } from "@/lib/session";
 
 /**
@@ -26,16 +25,26 @@ export async function signIn(formData) {
     return { user: null, redirectTo: `/signin?${params.toString()}` };
   }
 
-  const sessionId = createSession(user.id);
-
-  const cookieStore = await cookies();
-  cookieStore.set("session", sessionId, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    maxAge: 60 * 60 * 24 * 7,
-    path: "/",
-  });
+  try {
+    const sessionId = createSession(user.id);
+    const cookieStore = await cookies();
+    cookieStore.set("session", sessionId, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24 * 7,
+      path: "/",
+    });
+  } catch (error) {
+    console.error("Failed to create the sign-in session.", error);
+    return {
+      user: null,
+      errorCode:
+        error instanceof Error && error.message.startsWith("SESSION_SECRET")
+          ? "session_configuration"
+          : "server",
+    };
+  }
 
   return {
     user: { name: user.name, role: user.role },

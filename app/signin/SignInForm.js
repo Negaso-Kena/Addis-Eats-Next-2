@@ -18,11 +18,26 @@ export default function SignInForm({ next }) {
 
     try {
       const result = await signIn(new FormData(event.currentTarget));
-      if (result.user) {
-        setSessionUser(result.user);
-      } else {
+      if (!result.user) {
         setIsPending(false);
+        if (result.errorCode === "session_configuration") {
+          setError(
+            "Sign-in is unavailable because the server session secret is missing or invalid. Please contact the site administrator.",
+          );
+          return;
+        }
+
+        if (result.errorCode === "server") {
+          setError("The server could not start your session. Please try again.");
+          return;
+        }
+
+        router.replace(result.redirectTo);
+        router.refresh();
+        return;
       }
+
+      setSessionUser(result.user);
       router.replace(result.redirectTo);
       router.refresh();
     } catch (submitError) {

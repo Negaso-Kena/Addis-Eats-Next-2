@@ -1,8 +1,10 @@
+import { randomUUID } from "node:crypto";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/session";
 import { getOrderForUser } from "@/lib/orders-store";
 import { formatCurrency } from "@/lib/formatCurrency";
 import CheckoutForm from "@/components/CheckoutForm";
+import ClearCartOnConfirm from "@/components/ClearCartOnConfirm";
 import Link from "next/link";
 
 export const metadata = {
@@ -47,6 +49,8 @@ export default async function CheckoutPage({ searchParams }) {
   if (order) {
     return (
       <section>
+        {/* The order is placed: empty the cart so the same items are not sent twice. */}
+        <ClearCartOnConfirm />
         <h1>Order confirmed!</h1>
         <p>
           Order {order.id} has been received. Estimated arrival in {order.etaLabel}.
@@ -69,7 +73,7 @@ export default async function CheckoutPage({ searchParams }) {
       <p className="muted">
         Signed in as {user.name}
       </p>
-      <CheckoutForm error={error} />
+      <CheckoutForm error={error} requestId={randomUUID()} />
     </section>
   );
 }

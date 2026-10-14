@@ -12,7 +12,7 @@ export const metadata = {
 
 export const dynamic = "force-dynamic";
 
-export default async function OrderPage({ params }) {
+export default async function OrderPage({ params, searchParams }) {
   const user = await getSession();
   if (!user) {
     const { id } = await params;
@@ -23,6 +23,8 @@ export default async function OrderPage({ params }) {
   const order = getOrderForUser(id, user.id, user.role === "staff");
   if (!order) notFound();
 
+  const query = await searchParams;
+
   return (
     <section className={styles.orderPage}>
       <h1>Order {order.id}</h1>
@@ -30,6 +32,11 @@ export default async function OrderPage({ params }) {
         Signed in as {user.name}
         {user.role === "staff" && " (staff)"}
       </p>
+      {query?.notice === "too_late" && (
+        <p role="alert">
+          This order is already on the way or delivered, so it can no longer be cancelled.
+        </p>
+      )}
       <OrderStatus initial={order} />
     </section>
   );

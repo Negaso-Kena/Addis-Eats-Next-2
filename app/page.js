@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getSpecials } from "@/lib/dishes";
+import { siteUrl } from "@/lib/siteUrl";
 import DishList from "./menu/DishList";
 import styles from "./page.module.css";
 
@@ -33,8 +34,24 @@ export const metadata = {
 export default function HomePage() {
   const specials = getSpecials();
 
+  // Only facts the page and data already state — nothing invented.
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    name: "Addis Eats",
+    url: siteUrl.href,
+    servesCuisine: "Ethiopian",
+    hasMenu: new URL("/menu", siteUrl).href,
+  };
+
   return (
     <section>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       <div className={styles.hero}>
         <h1>Addis Eats</h1>
         <p>Authentic Ethiopian flavours, delivered warm across Addis Ababa.</p>

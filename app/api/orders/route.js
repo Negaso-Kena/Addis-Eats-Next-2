@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
-import { orderSchema } from "@/lib/validation";
-import { getDishById } from "@/lib/dishes";
-import { getDeliveryEstimate } from "@/lib/delivery";
-import { saveOrder, getAllOrders, getOrdersByUserId } from "@/lib/orders-store";
+import { createOrderForUser } from "@/lib/order-service";
+import { getAllOrders, getOrdersByUserId } from "@/lib/orders-store";
 import { getSession } from "@/lib/session";
 import { privateNoStoreHeaders } from "@/lib/cacheHeaders";
 
@@ -42,44 +40,16 @@ export async function POST(request) {
     );
   }
 
-  const parsed = orderSchema.safeParse(body);
-  if (!parsed.success) {
+  // Same validation and pricing as the server action — one shared service.
+  const result = createOrderForUser(user, body);
+  if (!result.ok) {
     return NextResponse.json(
-      { error: "Validation failed.", fieldErrors: parsed.error.flatten().fieldErrors },
-      { status: 422, headers: privateNoStoreHeaders }
+      { error: result.error, fieldErrors: result.fieldErrors },
+      { status: result.status, headers: privateNoStoreHeaders }
     );
   }
 
-  const { name, phone, area, note, items } = parsed.data;
-
-  const lineItems = [];
-  for (const line of items) {
-    const dish = getDishById(line.id);
-    if (!dish) {
-      return NextResponse.json(
-        { error: `Unknown dish id: ${line.id}` },
-        { status: 422, headers: privateNoStoreHeaders }
-      );
-    }
-    lineItems.push({ id: dish.id, name: dish.name, price: dish.price, quantity: line.quantity });
-  }
-
-  const subtotal = lineItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
-  const { fee: deliveryFee, etaLabel } = getDeliveryEstimate(area);
-  const total = subtotal + deliveryFee;
-
-  const order = saveOrder({
-    userId: user.id,
-    customer: { name, phone, area, note },
-    items: lineItems,
-    subtotal,
-    deliveryFee,
-    etaLabel,
-    total,
-    status: "Pending",
-  });
-
-  return NextResponse.json(order, {
+  return NextResponse.json(result.order, {
     status: 201,
     headers: privateNoStoreHeaders,
   });

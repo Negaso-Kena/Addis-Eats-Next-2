@@ -20,5 +20,10 @@ export function proxy(request) {
 // Private routes only. Keeping this narrow means public pages
 // (/, /menu, /cart) never invoke middleware and stay static/ISR.
 export const config = {
-  matcher: ["/checkout/:path*", "/orders/:path*", "/kitchen/:path*"],
+  matcher: [
+    "/checkout/:path*",
+    "/orders/:path*",
+    "/kitchen/:path*",
+    "/dashboard/:path*",
+  ],
 };

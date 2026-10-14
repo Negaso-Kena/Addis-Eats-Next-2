@@ -1,12 +1,24 @@
 "use client";
 
+import { useFormStatus } from "react-dom";
 import { useCart } from "@/lib/cart-store";
 import { placeOrder } from "@/app/actions";
 import { DELIVERY_AREAS } from "@/lib/delivery";
 import { formatCurrency } from "@/lib/formatCurrency";
 import styles from "./CheckoutForm.module.css";
 
-export default function CheckoutForm({ error }) {
+// Disabled while the action is pending, so an impatient second tap cannot
+// place a second order. (The server also ignores a repeated requestId.)
+function SubmitButton({ className }) {
+  const { pending } = useFormStatus();
+  return (
+    <button type="submit" className={className} disabled={pending}>
+      {pending ? "Placing order…" : "Place order"}
+    </button>
+  );
+}
+
+export default function CheckoutForm({ error, requestId }) {
   const { items, total } = useCart();
   const checkoutItems = items;
   const subtotal = total;
@@ -17,8 +29,9 @@ export default function CheckoutForm({ error }) {
 
   return (
     <form action={placeOrder} className={styles.form}>
-      {/* Real cart items travel as a genuine form field, so submitting
-          this form — even with JS disabled — still places a real order. */}
+      {/* The cart lives in the browser, so the items travel as a hidden field.
+          onSubmit-style: a real <form action>, so Enter works as well as a click. */}
+      <input type="hidden" name="requestId" value={requestId} />
       <input
         type="hidden"
         name="items"
@@ -27,13 +40,13 @@ export default function CheckoutForm({ error }) {
 
       <div className={styles.field}>
         <label htmlFor="name">Full name</label>
-        <input id="name" name="name" required />
+        <input id="name" name="name" autoComplete="name" required />
         {error?.field === "name" && <p className={styles.error}>{error.message}</p>}
       </div>
 
       <div className={styles.field}>
         <label htmlFor="phone">Phone number</label>
-        <input id="phone" name="phone" type="tel" placeholder="0912 345 678" required />
+        <input id="phone" name="phone" type="tel" inputMode="tel" autoComplete="tel" placeholder="0912 345 678" required />
         {error?.field === "phone" && <p className={styles.error}>{error.message}</p>}
       </div>
 
@@ -65,9 +78,7 @@ export default function CheckoutForm({ error }) {
       </div>
       <p className={styles.hint}>Delivery fee is added once you pick an area.</p>
 
-      <button type="submit" className={styles.submit}>
-        Place order
-      </button>
+      <SubmitButton className={styles.submit} />
     </form>
   );
 }

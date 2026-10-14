@@ -38,9 +38,11 @@ across serverless instances.
 
 ### 1. Order status
 - **File:** `app/orders/[id]/OrderStatus.jsx`
-- **Seed:** the order rendered by `app/orders/[id]/page.js`
-- **Refresh rule:** recompute status locally every 5 seconds from the order's creation time; stop once the status is `Delivered`
-- **Why:** this demo's status is derived from order age rather than updated by a kitchen. Local calculation avoids polling a process-local order store across Vercel instances.
+- **Key:** `/api/orders/${id}`, answered by the session-checked, ownership-scoped route handler (private, no-store)
+- **Seed:** the order rendered by `app/orders/[id]/page.js`, passed as `fallbackData` with `revalidateOnMount: false`, so there is no spinner on arrival
+- **Refresh rule:** `refreshInterval` of 5 seconds while the order is active; `0` (stop) once it is `Delivered` or `Cancelled`; no refresh while the tab is hidden or offline; focus/reconnect defaults
+- **Failure:** the last received status stays on screen with a notice and a retry button; a 401 shows a sign-in link
+- **Why:** this is the one piece of data that changes without the person doing anything. Status is still *simulated* (derived from order age on the server), but the browser now really asks the server. Known limit: orders live in one process's memory, so on Vercel a poll can reach a different instance and fail. The UI keeps the last status rather than showing an alarm.
 
 ### 2. Menu search
 - **File:** `app/menu/SearchBox.jsx`
@@ -61,7 +63,32 @@ across serverless instances.
 | Decision | Choice | Reason |
 |---|---|---|
 | Fetcher | one shared `lib/fetcher.js` | one place that turns bad responses into errors |
-| Polling | order status only | the only data that changes without the user doing anything |
+| Polling | order status only, every 5 s, stops when final | the only data that changes without the user doing anything |
 | Debounce | 300 ms | long enough to skip keystrokes, short enough to feel instant |
 | `revalidateOnFocus` / `revalidateOnReconnect` | left at SWR defaults | menu and order data can change, and a refetch on focus is cheap; turning them off is for data that never changes |
 | Server seed | `fallbackData` per query | no loading state for data the server already had |
+
+## Day 46 — data representation
+
+| Data | Where | Shape | Why |
+|---|---|---|---|
+| Revenue by neighbourhood | Server (`lib/dashboard-data.js`) | 5 rows: area, orders, revenue | Aggregated before it crosses; charting libraries are client code, so the data must be small. Cancelled orders excluded. |
+| Orders per day | Server | 14 rows, zero-filled, grouped by Addis Ababa calendar day | A line answers "are orders growing?". |
+| Order table | Server (`app/orders/(list)`) | 8 rows per page | Sort and page are in the URL; a read-only table needs no client JavaScript. |
+
+- Sort keys are whitelisted (`date`, `total`, `status`); anything else falls back to date, newest first. `page` is clamped to the real range.
+- Charts: bar axis starts at zero, units named in headings (ETB, orders), colour is never the only key, and each chart has its data as a table beneath it.
+- The four states: loading (skeleton the shape of the page), empty (says why and links to the menu), error (`error.js` with retry), loaded.
+- Demo data: set `SEED_DEMO_ORDERS=true` to add ten clearly labelled orders (`demo: true`, "Demo customer", no owner, ids `AE-DEMO-NN`). Customers can never open them. They disappear on restart, like every order here.
+
+## Capstone additions
+
+| Data | Mechanism | Refresh rule | Why |
+|---|---|---|---|
+| Order status on `/orders/[id]` | Server-sent events, falling back to SWR polling | Pushed every 3 s while active; if the stream cannot connect, SWR polls every 5 s; both stop when the order is Delivered or Cancelled | One-directional and frequent: SSE is the simplest mechanism that does the job. WebSockets would add a separate server for nothing. |
+| Map | Leaflet, loaded with `dynamic(..., { ssr: false })` | Courier marker moves each second while On the way | Leaflet touches `window` on import, so it can never render on the server |
+| Orders CSV | Built in the browser from rows the server already shaped | On click | Hundreds of rows; past a few thousand, stream it from a route handler |
+
+Formatting: every price, date and relative time goes through `lib/format.js`, with the locale (`en-ET`, `en-GB`) and the time zone (`Africa/Addis_Ababa`) named. Money is stored as integer birr.
+CSV: values containing a comma, quote or newline are quoted; values beginning with `=`, `+`, `-` or `@` are prefixed with `'` so spreadsheets do not run them as formulas.
+

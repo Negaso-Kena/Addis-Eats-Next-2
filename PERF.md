@@ -222,3 +222,21 @@ Do not use the development server.
   appropriate.
 - The public routes continue to render menu data on the server, and the existing
   pagination and search behavior is retained.
+
+## Capstone final run (fill in from the DEPLOYED URL)
+
+These numbers cannot be produced from source code. Take them with Chrome Lighthouse on the deployed URL, mobile, throttled (Slow 4G, 4x CPU), in a private window. Do not enter numbers you did not measure.
+
+| Measure | Target | Before (earlier run above) | After (this run) | What caused the change |
+|---|---|---|---|---|
+| LCP, `/` | < 2.5 s | see above | _measure_ | |
+| LCP, `/menu` | < 2.5 s | see above | _measure_ | |
+| CLS | < 0.1 | see above | _measure_ | |
+| INP | < 200 ms | not reported | _measure_ | |
+| Lighthouse performance, `/menu` | 90+ | see above | _measure_ | |
+| Largest image delivered | < 150 kB | see above | _measure_ | |
+
+Known weight: `public/images/beyaynet.png` is about 6 MB at source. `next/image` serves a resized copy, but the source file is still in the repository; compress it (WebP, display size) before the final measurement.
+
+Added in the capstone: Leaflet and react-leaflet load only on `/orders/[id]` (dynamic import, `ssr: false`), Recharts only on `/dashboard`, so neither adds weight to the menu. The map placeholder and chart containers have fixed heights, so they do not cause layout shift.
+

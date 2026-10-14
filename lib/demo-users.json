@@ -1,0 +1,23 @@
+[
+  {
+    "id": "usr_customer",
+    "name": "Naga",
+    "phone": "0911223344",
+    "role": "customer",
+    "passwordHash": "$2b$12$nd9P0rdXFjfYbF7eM5Erw.8Bikid0AYTJ/7bDBIWBaPNEUwEvnvmS"
+  },
+  {
+    "id": "usr_customer_test",
+    "name": "Test Customer",
+    "phone": "0911000000",
+    "role": "customer",
+    "passwordHash": "$2b$12$d9akYyEVR8MI2NcSuJkW0.8mxXSAugPeAPR6OOGKaMr0LsdBGna16"
+  },
+  {
+    "id": "usr_staff",
+    "name": "Kitchen Staff",
+    "phone": "0999887766",
+    "role": "staff",
+    "passwordHash": "$2b$12$IXgyw2bR4QMb8yFkM1e6oeS5pE9nkDKUkZP0aiFRX/Au8rAhgZVlW"
+  }
+]

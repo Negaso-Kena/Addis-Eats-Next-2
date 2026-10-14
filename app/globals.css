@@ -128,3 +128,13 @@ h3 {
     padding: var(--space-5) var(--space-4);
   }
 }
+
+/* Touch: fingers are imprecise. On coarse pointers every control is at least 44px. */
+@media (pointer: coarse) {
+  button,
+  select,
+  input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+  summary {
+    min-height: 44px;
+  }
+}

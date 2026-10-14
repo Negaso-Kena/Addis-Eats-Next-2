@@ -8,6 +8,7 @@ export default function robots() {
         "/api/",
         "/cart",
         "/checkout",
+        "/dashboard",
         "/kitchen",
         "/orders",
         "/signin",

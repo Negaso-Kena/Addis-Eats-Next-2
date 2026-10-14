@@ -8,5 +8,10 @@ export default function KitchenLink() {
   const user = useSession();
   if (user?.role !== "staff") return null;
 
-  return <Link href="/kitchen" className={styles.kitchenLink}>Kitchen</Link>;
+  return (
+    <>
+      <Link href="/kitchen" className={styles.kitchenLink}>Kitchen</Link>
+      <Link href="/dashboard" className={styles.kitchenLink}>Dashboard</Link>
+    </>
+  );
 }

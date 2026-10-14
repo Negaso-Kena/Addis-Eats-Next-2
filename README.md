@@ -1,5 +1,57 @@
 # Addis Eats — Next.js Foundations Project
 
+## Capstone summary
+
+**Addis Eats** is a food-ordering app for people in Addis Ababa. Customers browse the menu, order to one of five neighbourhoods and track the delivery live on a map; kitchen staff see every order and a sales dashboard.
+
+- **Live URL:** `PASTE-YOUR-VERCEL-URL-HERE` (open it in a private window before presenting)
+- **Demo accounts** (public course credentials, stored as bcrypt hashes):
+
+  | Role | Phone | Password |
+  |---|---|---|
+  | Customer | `0911223344` | `customer123` |
+  | Customer with no orders (new-account view) | `0911000000` | `customer456` |
+  | Staff | `0999887766` | `staff123` |
+
+### Run it from a fresh clone
+
+```powershell
+npm install
+copy .env.example .env.local     # then edit SESSION_SECRET (see below)
+npm run build
+npm run start
+```
+
+### Environment variables
+
+| Variable | Required | What it does |
+|---|---|---|
+| `SESSION_SECRET` | **Yes in production** (32+ bytes) | Signs the session cookie. `node -e "console.log(require('node:crypto').randomBytes(32).toString('base64url'))"` |
+| `SITE_URL` | Recommended | Public origin, used for canonical URLs, social previews, sitemap |
+| `SEED_DEMO_ORDERS` | No | `true` adds ten labelled demo orders so the dashboard has data. Off by default |
+
+`NEXT_PUBLIC_*` is not used: nothing here is secret-safe to publish.
+
+### What is in it
+
+| Area | Where |
+|---|---|
+| Menu, search (debounced SWR), paging, dish pages | `/menu`, `/menu/browse`, `/menu/[id]` |
+| Cart (browser only) and checkout (server action, validated, idempotent) | `/cart`, `/checkout` |
+| Order tracking: server-rendered, live over server-sent events, polling fallback, Leaflet map | `/orders/[id]` |
+| Orders table: sort and page in the URL, CSV export | `/orders` |
+| Staff dashboard: revenue by neighbourhood, orders per day, each with a data table | `/dashboard` |
+| Auth: bcrypt, signed cookie, three layers, ownership-scoped writes | `proxy.js`, `lib/session.js`, `app/actions.js` |
+| Metadata, previews, sitemap, robots, JSON-LD | root layout, `app/menu/[id]`, `app/page.js` |
+
+Documents: [`AUTH.md`](./AUTH.md) · [`DATA.md`](./DATA.md) · [`PERF.md`](./PERF.md) · [`STRATEGY.md`](./STRATEGY.md) · [`BOUNDARY.md`](./BOUNDARY.md) · [`FUTURE.md`](./FUTURE.md) · [`PRESENT.md`](./PRESENT.md)
+
+### Known limits (deliberate)
+
+- **There is no database.** Orders live in one server process's memory: they vanish on restart and are not shared between Vercel instances. On the deployed site, place and track orders in the same sitting, and rely on `SEED_DEMO_ORDERS=true` for dashboard data.
+- Order progress and the courier's position on the map are **simulated** from the order's age.
+- Authentication is a teaching implementation: no registration, password reset or rate limiting.
+
 Day 35's Addis Eats (React/Vite), rebuilt on Next.js App Router: file-based routing,
 nested layouts, a deliberate rendering strategy per route, server components reading
 their own data, and real endpoints/actions behind the UI — per the Day 40 brief.
@@ -126,6 +178,15 @@ Route (app) Revalidate Expire
 
 
 Matches [`STRATEGY.md`](./STRATEGY.md) line for line.
+
+## First-time setup
+
+`lib/demo-users.json` (bcrypt hashes of the public demo accounts) is committed.
+To regenerate it: `node scripts/setup-demo-users.mjs`.
+
+## Day 46: dashboard and orders table
+
+Staff-only `/dashboard` (revenue by neighbourhood, orders per day, each with its data as a table) and a sortable, paged `/orders` table. To see charts without placing orders first, set `SEED_DEMO_ORDERS=true` in `.env.local` and restart: ten labelled demo orders are added in memory. Leave it unset for a real, empty store.
 
 ## Running locally
 

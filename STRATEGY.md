@@ -15,6 +15,12 @@ One line of reasoning per route, per the Day 40 brief (Part 2 §2).
 
 | `/checkout`   | Dynamic                | Reads `searchParams` (`?order=`, `?error=`, `?field=`, `?message=`) to decide whether to show the form, a validation error, or the order confirmation after `placeOrder` redirects back to this same route. A real `searchParams` read at request time is the brief's own stated trigger for dynamic — this wasn't forced with `export const dynamic`, it's a direct consequence of how the confirmation/error flow was designed. |
 
+| `/orders`     | Dynamic                | Reads the session cookie and `searchParams` (`?sort=`, `?dir=`, `?page=`). The sort and page live in the URL so they are shareable and the back button works; the table itself stays a server component. |
+
+| `/dashboard`  | Dynamic (staff only)   | Reads the session cookie, then aggregates every order on the server. Only the summarised rows (five areas, fourteen days) cross to the two client chart components. |
+
+Day 46 note: `app/orders/loading.js` and `error.js` live in the `(list)` route group, so they wrap only the order list. Placed at `app/orders/` they would also wrap `/orders/[id]`, and a refused order page would stream as 200 instead of returning 404.
+
 ## Route I changed my mind about
 
 `/checkout` was originally going to be a plain static form with a client-side `fetch` to `/api/orders` on submit — the more obvious approach. Writing the reasoning down (per the brief's own advice: "writing the sentence usually changes the answer for at least one route") surfaced the problem: a `fetch`-based submit fails the "disable JavaScript, submit" check outright. Switching to `<form action={placeOrder}>` — a real HTML form bound directly to a server action — meant the confirmation/error state now has to live in the URL instead of client state, which is what made the route genuinely dynamic rather than static-with-a-client-effect.
@@ -48,3 +54,8 @@ npm run start
 ```
 
 Visit `http://localhost:3000`.
+
+## Capstone note
+
+`/orders/[id]` is dynamic (it reads the session cookie and must be private to its owner). The map is a client leaf loaded with `ssr: false`; the status card is seeded by the server render and then kept live by the stream. `/api/orders/[id]/stream` is a route handler that never ends, which is the one place a route handler is the right tool: the browser's `EventSource` calls it, not another server component.
+

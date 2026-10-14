@@ -3,8 +3,9 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import {
-  findUserByPhone,
+  verifyCredentials,
   createSession,
+  SESSION_TTL_SECONDS,
 } from "@/lib/session";
 
 /**
@@ -17,9 +18,13 @@ export async function signIn(formData) {
   const password = String(formData.get("password") ?? "");
   const nextRaw = String(formData.get("next") ?? "/");
 
-  const user = findUserByPhone(phone);
+  // Bound the input before doing any hashing work.
+  const user =
+    phone.length <= 32 && password.length <= 128
+      ? await verifyCredentials(phone, password)
+      : null;
 
-  if (!user || user.password !== password) {
+  if (!user) {
     const params = new URLSearchParams({ error: "1" });
     if (nextRaw && nextRaw !== "/") params.set("next", nextRaw);
     return { user: null, redirectTo: `/signin?${params.toString()}` };
@@ -32,7 +37,7 @@ export async function signIn(formData) {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 7,
+      maxAge: SESSION_TTL_SECONDS,
       path: "/",
     });
   } catch (error) {
@@ -53,7 +58,11 @@ export async function signIn(formData) {
 }
 
 function getSafeRedirectPath(value) {
-  if (!value.startsWith("/") || value.startsWith("//")) {
+  if (
+    !value.startsWith("/") ||
+    value.startsWith("//") ||
+    /[\\\u0000-\u001f\u007f]/.test(value) // backslashes and control characters
+  ) {
     return "/";
   }
 
